@@ -1,0 +1,66 @@
+# Read by arduino-installer. See https://github.com/nimaltd/arduino-installer
+#
+# A library made to try the installer on, and a starting point for your own:
+# copy this file to the root of your library's repository, and change what is
+# yours. Only name and files are required. The keys this library has no use
+# for are here too, commented out, so every one is in one place.
+#
+# There is no version here. The installer reads it from the @version tag in
+# the first header listed, so the source files are the only place it is written.
+
+name: example                      # the library's name, and its folder
+description: A period that never blocks, made to try arduino-installer on
+repository: https://github.com/nimaltd/arduino-installer-example
+license: Apache-2.0                # the licence's SPDX name
+
+kind: utility                      # driver, middleware, rtos, protocol, filesystem,
+                                   # utility or bsp
+category: timing                   # sensor, storage, display, communication, wireless,
+                                   # rtos, timing, power, input, math or system
+provides: []                       # what it gives other libraries: [rtos] for an RTOS
+
+requires:
+  arduino_installer: 1.0.0         # the oldest arduino-installer that reads this file
+  libraries: []                    # other libraries, installed first when missing,
+                                   # always into the libraries folder:
+                                   #   - osal >= 1.0.0   no owner means nimaltd
+                                   #   - owner/lib       anyone else's
+  peripherals: []                  # hardware it uses, named to the user, such as:
+                                   #   - type: i2c
+                                   #     note: 400 kHz
+
+install:
+  layout: mirror                   # mirror keeps the repository's folders, here src/,
+                                   # flat puts every file at the top
+
+files:
+  headers:                         # .h files; the first is the one to #include
+    - src/example.h
+    - src/example_config.h         # your settings, in USER CODE lines kept on update
+  sources:                         # .c and .cpp files, which Arduino builds
+    - src/example.cpp
+
+options:                           # parts the user chooses at install
+  uptime:                          # the name typed after --with and --without
+    description: Uptime in hours, minutes and seconds   # the question asked
+    libraries: []                  # libraries this part needs, installed first
+    files:
+      headers:
+        - src/example_uptime.h
+      sources:
+        - src/example_uptime.cpp
+
+extras:                            # copied as they are, never compiled
+  - LICENSE.md
+  - NOTICE
+  - README.md
+
+arduino:                           # read by arduino-installer only, for library.properties
+  architectures: ["*"]             # the boards it runs on, such as [avr, esp32]; * for any
+  category: Timing                 # Arduino's own category; guessed from category above
+                                   # when left out
+  author: Nima Askari (NimaLTD)    # who wrote it; the repository's owner when left out
+  # maintainer: you@example.com    # who looks after it; the author when left out
+  # depends:                       # libraries from Library Manager it needs, by name
+  #   - Adafruit BusIO             # with a version when one is needed:
+  #   - ArduinoJson (>=6.0.0)      #   name (>=version)
