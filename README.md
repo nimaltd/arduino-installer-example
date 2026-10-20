@@ -4,7 +4,7 @@ A small library made to try [arduino-installer](https://github.com/nimaltd/ardui
 
 It does one useful thing. `example_due()` says yes once every `EXAMPLE_PERIOD_MS` milliseconds and never blocks, so `loop()` can blink an LED, read a sensor or print a line on a rhythm without `delay()` holding everything else up. `example_hello()` prints `EXAMPLE_GREETING` on Serial. Both settings are in `example_config.h`. Its `uptime` option adds `example_uptime()`, the time since start up in hours, minutes and seconds. It builds for any board.
 
-It also has a step for arduino-installer 2.0.0 to run, so you can see one work: installed into a sketch, `make-id` makes `example_id.h` in the sketch's folder, the board's own ID, a random number. The installer shows what it runs and asks first.
+It also has a step for arduino-installer 2.1.0 to run, so you can see one work: installed into a sketch, `make-id` makes `example_id.h` in the sketch's folder, the board's own ID, a random number. The installer shows what it runs and asks first. Its script stays in the library's folder, named `{library}/tools/make_id.py`, which is the library's folder wherever it went.
 
 ---
 
@@ -16,7 +16,7 @@ Install the installer once:
 pip install arduino-installer
 ```
 
-It needs arduino-installer 2.0.0 or newer. `pip install --upgrade arduino-installer` brings an older one up to date.
+It needs arduino-installer 2.1.0 or newer. `pip install --upgrade arduino-installer` brings an older one up to date.
 
 Then, from your sketch's folder, the one holding `blink.ino` for a sketch called `blink`:
 
@@ -76,7 +76,7 @@ Hello from example 3
 ```
 Run
   make-id      Make this board's own ID, example_id.h
-               python scripts/make_id.py example_id.h
+               python src/example/tools/make_id.py example_id.h
                Run it? [Y/n]:
 Made example_id.h: device B5B29845.
                done
@@ -144,7 +144,7 @@ Then anyone installs your library with:
 arduino-installer yourname/yourlibrary
 ```
 
-Keep the code in `src/`, the headers beside the code that includes them, and `extern "C"` in every header of C code, as this one has. `run` lists the steps run after an install into a sketch, with the script in [`scripts/make_id.py`](scripts/make_id.py). The [arduino-installer README](https://github.com/nimaltd/arduino-installer#for-someone-writing-a-library) has the rest.
+Keep the code in `src/`, the headers beside the code that includes them, and `extern "C"` in every header of C code, as this one has. `run` lists the steps run after an install into a sketch, with the script in [`tools/make_id.py`](tools/make_id.py). The [arduino-installer README](https://github.com/nimaltd/arduino-installer#for-someone-writing-a-library) has the rest.
 
 ---
 

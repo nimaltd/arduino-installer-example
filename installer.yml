@@ -2,11 +2,16 @@
 #
 # A library made to try the installer on, and a starting point for your own:
 # copy this file to the root of your library's repository, and change what is
-# yours. Only name and files are required. The keys this library has no use
-# for are here too, commented out, so every one is in one place.
+# yours. Only name and its headers or sources are required. The keys this
+# library has no use for are here too, commented out, so every one is in one
+# place.
 #
 # There is no version here. The installer reads it from the @version tag in
 # the first header listed, so the source files are the only place it is written.
+#
+# Written for 2.1.0: every file keeps the path it has here, src/example.h
+# lands at the library's src/example.h, and every path naming a place in the
+# sketch starts at the sketch's folder.
 
 name: example                      # the library's name, and its folder
 description: A period that never blocks, made to try arduino-installer on
@@ -20,8 +25,7 @@ category: timing                   # sensor, storage, display, communication, wi
 provides: []                       # what it gives other libraries: [rtos] for an RTOS
 
 requires:
-  arduino_installer: 2.0.0         # the oldest arduino-installer that reads this file;
-                                   # 2.0.0 for run below
+  arduino_installer: 2.1.0         # the oldest arduino-installer that reads this file
   libraries: []                    # other libraries, installed first when missing,
                                    # always into the libraries folder:
                                    #   - osal >= 1.0.0       no owner means nimaltd
@@ -35,43 +39,44 @@ requires:
                                    #   - type: i2c
                                    #     note: 400 kHz
 
-install:
-  layout: mirror                   # mirror keeps the repository's folders, here src/,
-                                   # flat puts every file at the top
-
-files:
-  headers:                         # .h files; the first is the one to #include
-    - src/example.h
-    - src/example_config.h         # your settings, in USER CODE lines kept on update
-  sources:                         # .c and .cpp files, which Arduino builds
-    - src/example.cpp
+headers:                           # .h files; the first is the one to #include
+  - src/example.h                  # every file keeps its path: the library's src/example.h
+  - src/example_config.h           # your settings, in USER CODE lines kept on update
+sources:                           # .c and .cpp files, which Arduino builds
+  - src/example.cpp
+                                   # a wildcard works too: src/*.cpp in one folder,
+                                   # src/**/*.cpp in every folder below src
 
 options:                           # parts the user chooses at install
   uptime:                          # the name typed after --with and --without
     description: Uptime in hours, minutes and seconds   # the question asked
     libraries: []                  # libraries this part needs, installed first
-    files:
-      headers:
-        - src/example_uptime.h
-      sources:
-        - src/example_uptime.cpp
+    headers:                       # its files, written like headers and sources above
+      - src/example_uptime.h
+    sources:
+      - src/example_uptime.cpp
 
 extras:                            # copied as they are, never compiled
-  - LICENSE.md
+  - LICENSE.md                     # in the library's folder
   - NOTICE
   - README.md
+  - tools                          # the library's tools/, which the step below runs from.
+                                   # A root: puts one in the sketch instead, but only an
+                                   # install into a sketch can have that
 
 # once:                            # the sketch's own files, made when missing and the
-#   - from: templates/secrets.h    # user's from then on: never replaced or removed.
-#     to: arduino_secrets.h        # Into a sketch only; to: its place, when not its name
+#   - arduino_secrets.h            # user's from then on: never replaced or removed. Into
+#   - from: templates/secrets.h    # a sketch only. A path alone lands at that path in
+#     to: my_secrets.h             # the sketch, a to at another place
 
 run:                               # steps run once the files are in, each asked first.
                                    # Into a sketch only: in the libraries folder they
                                    # are left unrun, and the install goes ahead
   - label: make-id                 # the name typed after --run and --no-run
     description: Make this board's own ID, example_id.h   # shown with the question
-    script: scripts/make_id.py     # Python, run with the installer's own Python,
-                                   # or command: [program, arguments], with no shell
+    script: "{library}/tools/make_id.py"   # Python, run with the installer's own Python.
+                                   # {library} is the library's folder, wherever it went,
+                                   # in quotes, since YAML reads a bare { as a mapping
     args: [example_id.h]           # given to the script, in the sketch's folder, where
                                    # the sketch includes it
     unless: example_id.h           # skipped when this file is there already
