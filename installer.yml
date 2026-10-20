@@ -20,11 +20,17 @@ category: timing                   # sensor, storage, display, communication, wi
 provides: []                       # what it gives other libraries: [rtos] for an RTOS
 
 requires:
-  arduino_installer: 1.0.0         # the oldest arduino-installer that reads this file
+  arduino_installer: 2.0.0         # the oldest arduino-installer that reads this file;
+                                   # 2.0.0 for run below
   libraries: []                    # other libraries, installed first when missing,
                                    # always into the libraries folder:
-                                   #   - osal >= 1.0.0   no owner means nimaltd
-                                   #   - owner/lib       anyone else's
+                                   #   - osal >= 1.0.0       no owner means nimaltd
+                                   #   - owner/lib           anyone else's
+                                   #   - owner/lib@v1.2.0    a tag, branch or commit
+                                   #   - source: owner/other@v2.0.0
+                                   #     manifest: manifests/other.yml
+                                   #                         for a repository with no
+                                   #                         installer.yml of its own
   peripherals: []                  # hardware it uses, named to the user, such as:
                                    #   - type: i2c
                                    #     note: 400 kHz
@@ -54,6 +60,21 @@ extras:                            # copied as they are, never compiled
   - LICENSE.md
   - NOTICE
   - README.md
+
+# once:                            # the sketch's own files, made when missing and the
+#   - from: templates/secrets.h    # user's from then on: never replaced or removed.
+#     to: arduino_secrets.h        # Into a sketch only; to: its place, when not its name
+
+run:                               # steps run once the files are in, each asked first.
+                                   # Into a sketch only: in the libraries folder they
+                                   # are left unrun, and the install goes ahead
+  - label: make-id                 # the name typed after --run and --no-run
+    description: Make this board's own ID, example_id.h   # shown with the question
+    script: scripts/make_id.py     # Python, run with the installer's own Python,
+                                   # or command: [program, arguments], with no shell
+    args: [example_id.h]           # given to the script, in the sketch's folder, where
+                                   # the sketch includes it
+    unless: example_id.h           # skipped when this file is there already
 
 arduino:                           # read by arduino-installer only, for library.properties
   architectures: ["*"]             # the boards it runs on, such as [avr, esp32]; * for any

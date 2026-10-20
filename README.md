@@ -4,6 +4,8 @@ A small library made to try [arduino-installer](https://github.com/nimaltd/ardui
 
 It does one useful thing. `example_due()` says yes once every `EXAMPLE_PERIOD_MS` milliseconds and never blocks, so `loop()` can blink an LED, read a sensor or print a line on a rhythm without `delay()` holding everything else up. `example_hello()` prints `EXAMPLE_GREETING` on Serial. Both settings are in `example_config.h`. Its `uptime` option adds `example_uptime()`, the time since start up in hours, minutes and seconds. It builds for any board.
 
+It also has a step for arduino-installer 2.0.0 to run, so you can see one work: installed into a sketch, `make-id` makes `example_id.h` in the sketch's folder, the board's own ID, a random number. The installer shows what it runs and asks first.
+
 ---
 
 ## Try the installer with it
@@ -13,6 +15,8 @@ Install the installer once:
 ```bash
 pip install arduino-installer
 ```
+
+It needs arduino-installer 2.0.0 or newer. `pip install --upgrade arduino-installer` brings an older one up to date.
 
 Then, from your sketch's folder, the one holding `blink.ino` for a sketch called `blink`:
 
@@ -67,6 +71,32 @@ Hello from example 3
 #include "src/example/src/example.h"
 ```
 
+**Give the board an ID.** Installed into a sketch, the library's step runs last, once you say yes:
+
+```
+Run
+  make-id      Make this board's own ID, example_id.h
+               python scripts/make_id.py example_id.h
+               Run it? [Y/n]:
+Made example_id.h: device B5B29845.
+               done
+```
+
+`example_id.h` is now in the sketch's folder, beside `blink.ino`, which is where a sketch finds a header of its own:
+
+```cpp
+#include "src/example/src/example.h"
+#include "example_id.h"     // made by the make-id step, this board's own
+
+void setup()
+{
+    Serial.begin(115200);
+    Serial.println(EXAMPLE_DEVICE_ID, HEX);
+}
+```
+
+Run the install again, and the step is not asked about: `make-id skipped, example_id.h is already there`, so the ID never changes under a board already in use. Delete the file, and the next install asks again. `--run make-id` runs it without asking, `--no-run make-id` leaves it, and `--yes` takes every answer offered, for a script. In the libraries folder, which belongs to no sketch, it is left unrun, and the install goes ahead: `make-id not run, there is no project folder here to run it in`.
+
 **Keep a setting through an update.** Open `example_config.h`, in `Arduino/libraries/example/src/`, or in your sketch's `src/example/src/`, and change the period between its `USER CODE` lines:
 
 ```c
@@ -90,7 +120,7 @@ arduino-installer nimaltd/arduino-installer-example --with uptime
 example_uptime_t up = example_uptime();   /* up.hours, up.minutes, up.seconds */
 ```
 
-**Uninstall it.** From the sketch it is in, or from anywhere for the libraries folder. Its files go, and a configuration header with your settings in it is saved beside them first, as a `.bak`:
+**Uninstall it.** From the sketch it is in, or from anywhere for the libraries folder. Its files go, and a configuration header with your settings in it is saved beside them first, as a `.bak`. `example_id.h` stays in the sketch, since it is yours:
 
 ```bash
 arduino-installer --uninstall example
@@ -114,7 +144,7 @@ Then anyone installs your library with:
 arduino-installer yourname/yourlibrary
 ```
 
-Keep the code in `src/`, the headers beside the code that includes them, and `extern "C"` in every header of C code, as this one has. The [arduino-installer README](https://github.com/nimaltd/arduino-installer#for-someone-writing-a-library) has the rest.
+Keep the code in `src/`, the headers beside the code that includes them, and `extern "C"` in every header of C code, as this one has. `run` lists the steps run after an install into a sketch, with the script in [`scripts/make_id.py`](scripts/make_id.py). The [arduino-installer README](https://github.com/nimaltd/arduino-installer#for-someone-writing-a-library) has the rest.
 
 ---
 
