@@ -1,10 +1,10 @@
-# arduino-installer-example
+# lib-installer-arduino
 
-A small library made to try [arduino-installer](https://github.com/nimaltd/arduino-installer) on, and a starting point for making your own library installable for Arduino.
+A small library made to try [lib-installer](https://github.com/nimaltd/lib-installer) on, and a starting point for making your own library installable for Arduino.
 
 It does one useful thing. `example_due()` says yes once every `EXAMPLE_PERIOD_MS` milliseconds and never blocks, so `loop()` can blink an LED, read a sensor or print a line on a rhythm without `delay()` holding everything else up. `example_hello()` prints `EXAMPLE_GREETING` on Serial. Both settings are in `example_config.h`. Its `uptime` option adds `example_uptime()`, the time since start up in hours, minutes and seconds. It builds for any board.
 
-It also has a step for arduino-installer 2.1.0 to run, so you can see one work: installed into a sketch, `make-id` makes `example_id.h` in the sketch's folder, the board's own ID, a random number. The installer shows what it runs and asks first. Its script stays in the library's folder, named `{library}/tools/make_id.py`, which is the library's folder wherever it went.
+It also has a step for the installer to run, so you can see one work: installed into a sketch, `make-id` makes `example_id.h` in the sketch's folder, the board's own ID, a random number. The installer shows what it runs and asks first. Its script stays in the library's folder, named `{library}/tools/make_id.py`, which is the library's folder wherever it went.
 
 ---
 
@@ -13,15 +13,15 @@ It also has a step for arduino-installer 2.1.0 to run, so you can see one work: 
 Install the installer once:
 
 ```bash
-pip install arduino-installer
+pip install lib-installer
 ```
 
-It needs arduino-installer 2.1.0 or newer. `pip install --upgrade arduino-installer` brings an older one up to date.
+It needs lib-installer 3.0.0 or newer. `pip install --upgrade lib-installer` brings an older one up to date.
 
 Then, from your sketch's folder, the one holding `blink.ino` for a sketch called `blink`:
 
 ```bash
-arduino-installer nimaltd/arduino-installer-example
+lib-installer nimaltd/lib-installer-arduino
 ```
 
 It asks where the library goes. Press Enter, and it goes into the libraries folder of your sketchbook, where Library Manager installs to, for every sketch:
@@ -111,7 +111,7 @@ Run the install command again: every file is replaced, and your settings are sti
 **Add a part, and take it out.** `--with uptime` adds `example_uptime.h` and `example_uptime.cpp`. `--without uptime` takes them out again.
 
 ```bash
-arduino-installer nimaltd/arduino-installer-example --with uptime
+lib-installer nimaltd/lib-installer-arduino --with uptime
 ```
 
 ```cpp
@@ -123,13 +123,13 @@ example_uptime_t up = example_uptime();   /* up.hours, up.minutes, up.seconds */
 **Uninstall it.** From the sketch it is in, or from anywhere for the libraries folder. Its files go, and a configuration header with your settings in it is saved beside them first, as a `.bak`. `example_id.h` stays in the sketch, since it is yours:
 
 ```bash
-arduino-installer --uninstall example
+lib-installer --uninstall example
 ```
 
 **Without internet.** Download this repository as a zip, from the green **Code** button, **Download ZIP**, and give the installer the zip instead of the name:
 
 ```bash
-arduino-installer D:/Downloads/arduino-installer-example-main.zip
+lib-installer D:/Downloads/lib-installer-arduino-main.zip
 ```
 
 ---
@@ -141,10 +141,10 @@ Copy [`installer.yml`](installer.yml) to the root of your library's repository, 
 Then anyone installs your library with:
 
 ```bash
-arduino-installer yourname/yourlibrary
+lib-installer yourname/yourlibrary
 ```
 
-Keep the code in `src/`, the headers beside the code that includes them, and `extern "C"` in every header of C code, as this one has. `run` lists the steps run after an install into a sketch, with the script in [`tools/make_id.py`](tools/make_id.py). The [arduino-installer README](https://github.com/nimaltd/arduino-installer#for-someone-writing-a-library) has the rest.
+Keep the code in `src/`, the headers beside the code that includes them, and `extern "C"` in every header of C code, as this one has. `run` lists the steps run after an install into a sketch, with the script in [`tools/make_id.py`](tools/make_id.py). The [lib-installer README](https://github.com/nimaltd/lib-installer#for-someone-writing-a-library) has the rest.
 
 ---
 
