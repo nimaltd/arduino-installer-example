@@ -1,4 +1,4 @@
-# lib-installer-arduino
+# lib-installer-example-arduino
 
 A small library made to try [lib-installer](https://github.com/nimaltd/lib-installer) on, and a starting point for making your own library installable for Arduino.
 
@@ -21,7 +21,7 @@ It needs lib-installer 3.0.0 or newer. `pip install --upgrade lib-installer` bri
 Then, from your sketch's folder, the one holding `blink.ino` for a sketch called `blink`:
 
 ```bash
-lib-installer nimaltd/lib-installer-arduino
+lib-installer nimaltd/lib-installer-example-arduino
 ```
 
 It asks where the library goes. Press Enter, and it goes into the libraries folder of your sketchbook, where Library Manager installs to, for every sketch:
@@ -111,7 +111,7 @@ Run the install command again: every file is replaced, and your settings are sti
 **Add a part, and take it out.** `--with uptime` adds `example_uptime.h` and `example_uptime.cpp`. `--without uptime` takes them out again.
 
 ```bash
-lib-installer nimaltd/lib-installer-arduino --with uptime
+lib-installer nimaltd/lib-installer-example-arduino --with uptime
 ```
 
 ```cpp
@@ -129,7 +129,7 @@ lib-installer --uninstall example
 **Without internet.** Download this repository as a zip, from the green **Code** button, **Download ZIP**, and give the installer the zip instead of the name:
 
 ```bash
-lib-installer D:/Downloads/lib-installer-arduino-main.zip
+lib-installer D:/Downloads/lib-installer-example-arduino-main.zip
 ```
 
 ---
