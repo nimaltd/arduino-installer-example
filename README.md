@@ -16,7 +16,7 @@ Install the installer once:
 pip install lib-installer
 ```
 
-It needs lib-installer 3.0.0 or newer. `pip install --upgrade lib-installer` brings an older one up to date.
+It needs lib-installer 4.0.0 or newer. `pip install --upgrade lib-installer` brings an older one up to date.
 
 Then, from your sketch's folder, the one holding `blink.ino` for a sketch called `blink`:
 
@@ -136,7 +136,7 @@ lib-installer D:/Downloads/lib-installer-example-arduino-main.zip
 
 ## Make your own library installable
 
-Copy [`installer.yml`](installer.yml) to the root of your library's repository, and change what is yours: its name, its description, its repository, its files, and the `arduino` part that `library.properties` is written from. Every key the installer reads is in it, with a comment saying what it does; the ones this library has no use for are commented out. Only `name` and `files` are required.
+Copy [`installer.yml`](installer.yml) to the root of your library's repository, and change what is yours: its name, its description, its repository, its files, and the `arduino` part that `library.properties` is written from. Every key the installer reads is in it, with a comment saying what it does; the ones this library has no use for are commented out. Only `name` and its `headers` or `sources` are required.
 
 Then anyone installs your library with:
 
